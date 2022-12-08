@@ -8,7 +8,8 @@ namespace APi_DataBase.modals
         public int Id { get; set; }
         [StringLength(15)]
         public string? Platform { get; set; }
-        public DateTime? CreatedTimestamp { get; set; }
+        public DateTime? Created_Timestamp { get; set; }
+        public DateTime? Updated_Timestamp { get; set; }
         public string? Description { get; set; }
         [StringLength(15)]
         public string?  Licenses { get; set; }
