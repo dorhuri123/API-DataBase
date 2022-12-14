@@ -8,12 +8,11 @@ namespace APi_DataBase.Utils
         {
             List<T> obj_list = new List<T>();
             var type = typeof(T);
-            T obj = (T)Activator.CreateInstance(type);
             while (reader.Read())
             {
+                T obj = (T)Activator.CreateInstance(type);
                 foreach (var prop in type.GetProperties())
                 {
-                    //var propType = prop.PropertyType;
                     Type propType = prop.PropertyType;
                     prop.SetValue(obj, ChangeType(reader[prop.Name].ToString(), propType));
                 }

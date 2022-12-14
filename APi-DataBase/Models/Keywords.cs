@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APi_DataBase.modals
+namespace APi_DataBase.Models
 {
-    public class versions
+    public class Keywords
     {
-       
         [Key]
-        public int Id { get; set; }
         public int Project_Id { get; set; }
-        public int Number { get; set; }
+        [StringLength(20)]
+        public string? Keyword { get; set; }
     }
 }

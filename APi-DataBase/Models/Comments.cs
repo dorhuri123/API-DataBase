@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APi_DataBase.modals
+namespace APi_DataBase.Models
 {
     public class Comments
     {

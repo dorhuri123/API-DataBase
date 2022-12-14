@@ -1,14 +1,9 @@
-﻿using APi_DataBase.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
-
+﻿
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<APi_DataBaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("APi_DataBaseContext") ?? throw new InvalidOperationException("Connection string 'APi_DataBaseContext' not found.")));
+builder.Services.AddTransient<MySqlConnector.MySqlConnection>
+    (_ => new MySqlConnector.MySqlConnection(builder.Configuration["ConnectionStrings:Default"]));
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

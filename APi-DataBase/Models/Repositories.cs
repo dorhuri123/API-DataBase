@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace APi_DataBase.modals
+namespace APi_DataBase.Models
 {
-    public class repositories
+    public class Repositories
     {
         [Key]
         public int Id { get; set; }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APi_DataBase.modals
+namespace APi_DataBase.Models
 {
-    public class likes
+    public class Likes
     {
        
         [Key, StringLength(15)]
