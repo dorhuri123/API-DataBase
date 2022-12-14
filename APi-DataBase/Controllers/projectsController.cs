@@ -35,32 +35,34 @@ namespace APi_DataBase.Controllers
             {
                 connection.Open();
                 string query = ("SELECT * FROM projects");
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlCommand cmd = new(query, connection);
                 IDataReader dataReader = cmd.ExecuteReader();
                 projects_list = Utils.Tools.GetList<projects>(dataReader);
                 
             }
             return projects_list;
         }
-        
+
 
         // GET: api/projects/5
         [HttpGet("{id}")]
         public async Task<ActionResult<projects>> Getprojects(int id)
         {
-            var projects = await _context.projects.FindAsync(id);
-
-            if (projects == null)
+            List<projects> projects_list = new();
+            using (MySqlConnection connection = new("SERVER=localhost;DATABASE=db-project;UID=root;PASSWORD=159753"))
             {
-                return NotFound();
+                connection.Open();
+                string query = ("SELECT * FROM projects WHERE id = @id" );
+                MySqlCommand cmd = new(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                IDataReader dataReader = cmd.ExecuteReader();
+                projects_list = Utils.Tools.GetList<projects>(dataReader);
             }
-
-            return projects;
+            return projects_list[0];
         }
-
-        // PUT: api/projects/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+            // PUT: api/projects/5
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPut("{id}")]
         public async Task<IActionResult> Putprojects(int id, projects projects)
         {
             if (id != projects.Id)
