@@ -10,7 +10,7 @@ namespace APi_DataBase.Models
         public String Created_Timestamp { get; set; }
         public String Last_Pushed_Timestamp { get; set; }
         public int Size { get; set; }
-        public string Star_count { get; set; }
+        public string Stars_count { get; set; }
         public string? Language { get; set; }
         public bool? Issues_Enabled { get; set; }
         public int Forks_count { get; set; }
