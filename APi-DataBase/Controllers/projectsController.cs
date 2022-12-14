@@ -62,5 +62,59 @@ namespace APi_DataBase.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("project_id")]
+        public async Task<ActionResult<ProjectInfo>> GetInfoProject(int project_id)
+        {
+            ProjectInfo projectInfo = new();
+            try
+            {
+                _connection.Open();
+                //setting prop project
+                string query = ("SELECT * FROM projects WHERE id = @project_id");
+                MySqlConnector.MySqlCommand cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@project_id", project_id);
+                IDataReader dataReader = await cmd.ExecuteReaderAsync();;
+                projectInfo.project = Utils.Tools.GetList<Projects>(dataReader)[0];
+                //setting prop repositories
+                int repository_Id = projectInfo.project.Repository_Id;
+                query = ("SELECT * FROM repositories WHERE id = @repository_Id");
+                cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@repository_Id", repository_Id);
+                dataReader = await cmd.ExecuteReaderAsync();
+                projectInfo.repositories = Utils.Tools.GetList<Repositories>(dataReader);
+                //setting prop keywords
+                query = ("SELECT * FROM keywords WHERE project_id = @project_id");
+                cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@project_id", project_id);
+                dataReader = await cmd.ExecuteReaderAsync();
+                projectInfo.keywords = Utils.Tools.GetList<Keywords>(dataReader);
+                //setting prop versions
+                query = ("SELECT * FROM versions WHERE project_id = @project_id");
+                cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@project_id", project_id);
+                dataReader = await cmd.ExecuteReaderAsync();
+                projectInfo.versions = Utils.Tools.GetList<Versions>(dataReader);
+                //setting prop comments
+                query = ("SELECT * FROM comments WHERE project_id = @project_id");
+                cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@project_id", project_id);
+                dataReader = await cmd.ExecuteReaderAsync();
+                projectInfo.comments = Utils.Tools.GetList<Comments>(dataReader);
+                //setting prop likes
+                query = ("SELECT * FROM likes WHERE project_id = @project_id");
+                cmd = new(query, _connection);
+                cmd.Parameters.AddWithValue("@project_id", project_id);
+                dataReader = await cmd.ExecuteReaderAsync();
+                projectInfo.likes = Utils.Tools.GetList<Likes>(dataReader);
+                return Ok(projectInfo);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest();
+            }
+        }
+
+
     }
 }
