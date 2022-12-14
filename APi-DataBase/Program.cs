@@ -1,6 +1,8 @@
 ﻿using APi_DataBase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<APi_DataBaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("APi_DataBaseContext") ?? throw new InvalidOperationException("Connection string 'APi_DataBaseContext' not found.")));

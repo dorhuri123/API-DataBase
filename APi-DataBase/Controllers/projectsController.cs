@@ -4,9 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using APi_DataBase.Utils;
 using Microsoft.EntityFrameworkCore;
 using APi_DataBase.Data;
 using APi_DataBase.modals;
+using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using System.Data;
+using System.Data.Common;
 
 namespace APi_DataBase.Controllers
 {
@@ -25,8 +30,19 @@ namespace APi_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<projects>>> Getprojects()
         {
-            return await _context.projects.ToListAsync();
+            List<projects> projects_list = new List<projects>();
+            using (MySqlConnection connection = new MySqlConnection("SERVER=localhost;DATABASE=db-project;UID=root;PASSWORD=159753"))
+            {
+                connection.Open();
+                string query = ("SELECT * FROM projects");
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                IDataReader dataReader = cmd.ExecuteReader();
+                projects_list = Utils.Tools.GetList<projects>(dataReader);
+                
+            }
+            return projects_list;
         }
+        
 
         // GET: api/projects/5
         [HttpGet("{id}")]
