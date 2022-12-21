@@ -2,11 +2,10 @@
 {
     public class ProjectInfo
     {
-        public Projects project { get; set; }
-        public List<Keywords> keywords { get; set; }
-        public List<Repositories> repositories { get; set; }
-        public List<Versions> versions { get; set; }
-        public List<Comments> comments { get; set; }
-        public List<Likes> likes { get; set; }
+        public Projects? Project { get; set; }
+        public List<Keywords>? Keywords { get; set; }
+        public List<Repositories>? Repositories { get; set; }
+        public List<Versions>? Versions { get; set; }
+        public List<Comments>? Comments { get; set; }
     }
 }
