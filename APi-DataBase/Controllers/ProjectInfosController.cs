@@ -5,6 +5,8 @@ using System.Data;
 
 namespace APi_DataBase.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProjectInfosController : ControllerBase
     {
         private readonly MySqlConnection _connection;

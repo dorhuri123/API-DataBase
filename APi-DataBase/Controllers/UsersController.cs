@@ -4,6 +4,8 @@ using MySqlConnector;
 
 namespace APi_DataBase.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly MySqlConnection _connection;

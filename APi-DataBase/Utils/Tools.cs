@@ -4,7 +4,6 @@ namespace APi_DataBase.Utils
 {
     public class Tools
     {
-
         public static List<T> GetList<T>(IDataReader reader)
         {
             List<T> obj_list = new List<T>();
