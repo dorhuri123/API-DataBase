@@ -17,7 +17,7 @@ namespace APi_DataBase.Controllers
         }
 
         // GET: api/projects
-        [HttpGet("startIndex")]
+        [HttpGet("{startIndex}")]
         public async Task<ActionResult<IEnumerable<Projects>>> GetProjects(int startIndex)
         {
             var projects = new List<Projects>();
@@ -43,10 +43,12 @@ namespace APi_DataBase.Controllers
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
+                            Platform = reader.GetString("Platform"),
                             Name = reader.GetString("Name"),
                             Description = reader.GetString("Description"),
+                            Created_Timestamp = reader.GetDateTime("created_timestamp"),
+                            Updated_Timestamp = reader.GetDateTime("updated_timestamp"),
                             Homepage_Url = reader.GetString("Homepage_Url"),
-                            Licenses = reader.GetString("Licenses"),
                             Repository_Url = reader.GetString("Repository_Url"),
                             Language = reader.GetString("Language"),
                             Repository_Id = reader.GetInt32("Repository_Id"),

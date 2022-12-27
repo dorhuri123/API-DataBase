@@ -16,7 +16,7 @@ namespace APi_DataBase.Controllers
             _connection = connection;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ProjectInfo>> GetInfoProject(int id)
         {
             ProjectInfo projectInfo = new();
