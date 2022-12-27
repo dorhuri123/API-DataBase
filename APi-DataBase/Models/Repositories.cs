@@ -6,7 +6,6 @@ namespace APi_DataBase.Models
         public int Id { get; set; }
         public string? Host_Type { get; set; }
         public string? Name_With_Owner { get; set; }
-        public string? Fork { get; set; }
         public DateTime Created_Timestamp { get; set; }
         public DateTime Last_Pushed_Timestamp { get; set; }
         public int Size { get; set; }

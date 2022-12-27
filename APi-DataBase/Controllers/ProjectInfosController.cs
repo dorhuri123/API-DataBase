@@ -56,7 +56,7 @@ namespace APi_DataBase.Controllers
                 cmd = new(query, _connection);
                 cmd.Parameters.AddWithValue("@repository_Id", repository_Id);
                 IDataReader _dataReader = await cmd.ExecuteReaderAsync();
-                projectInfo.Repositories = Utils.Tools.GetList<Repositories>(_dataReader);
+                projectInfo.Repositories = Utils.Tools.GetList<Repositories>(_dataReader)[0];
 
                 return Ok(projectInfo);
 
