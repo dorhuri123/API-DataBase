@@ -38,24 +38,5 @@ namespace APi_DataBase.Controllers
             }
         }
 
-        [HttpDelete("DeleteComment/{id}")]
-        public IActionResult DeleteComment(int id)
-        {
-            try
-            {
-                _connection.Open();
-
-                // Delete the comment with the specified ID
-                MySqlCommand cmd = new MySqlCommand("DELETE FROM comments WHERE id=@id", _connection);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
-
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
     }
 }

@@ -32,6 +32,7 @@ namespace APi_DataBase.Controllers
                     FROM Projects p
                     LEFT JOIN Likes l ON l.Project_Id = p.Id
                     GROUP BY p.Id
+                    ORDER BY p.created_timestamp DESC
                     LIMIT @startIndex, 50", _connection);
 
                 command.Parameters.AddWithValue("@startIndex", startIndex);

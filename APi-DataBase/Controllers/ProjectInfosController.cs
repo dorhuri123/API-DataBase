@@ -25,10 +25,10 @@ namespace APi_DataBase.Controllers
                 _connection.Open();
                 string query = (
                      "SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, "
-                    +"(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count "
-                    +"FROM Projects p LEFT JOIN Likes l ON l.Project_Id = p.Id "
-                    +"WHERE p.id = @project_id "
-                    +"GROUP BY p.Id;" 
+                    + "(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count "
+                    + "FROM Projects p LEFT JOIN Likes l ON l.Project_Id = p.Id "
+                    + "WHERE p.id = @project_id "
+                    + "GROUP BY p.Id;"
 
                     + "SELECT * FROM keywords WHERE project_id = @project_id;"
                     + "SELECT * FROM versions WHERE project_id = @project_id;"
@@ -64,6 +64,21 @@ namespace APi_DataBase.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertProject([FromBody] ProjectInfo projectInfo)
+        {
+            try
+            {
+
+                return Ok();
+            }
+
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
