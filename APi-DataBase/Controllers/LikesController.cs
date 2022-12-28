@@ -56,6 +56,53 @@ namespace APi_DataBase.Controllers
                 return BadRequest();
             }
         }
+        // GET: api/projects
+        [HttpGet("{startIndex}, {username}")]
+        public async Task<ActionResult<IEnumerable<Projects>>> GetProjectsUserDontLike(int startIndex, string username)
+        {
+            var projects = new List<Projects>();
+
+            try
+            {
+                _connection.Open();
+                var command = new MySqlCommand("SELECT p.* " +
+                    "FROM projects p " +
+                    "WHERE p.id NOT IN " +
+                    "(" +
+                    "SELECT l.project_id " +
+                    "FROM likes l " +
+                    "WHERE l.username = @username" +
+                    ")  LIMIT @startIndex,50                                                                                                                                                                            ", _connection);
+                command.Parameters.AddWithValue("@startIndex", startIndex);
+                command.Parameters.AddWithValue("@username", username);
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var project = new Projects
+                        {
+                            Id = reader.GetInt32("Id"),
+                            Platform = reader.GetString("Platform"),
+                            Name = reader.GetString("Name"),
+                            Description = reader.GetString("Description"),
+                            Created_Timestamp = reader.GetDateTime("created_timestamp"),
+                            Updated_Timestamp = reader.GetDateTime("updated_timestamp"),
+                            Homepage_Url = reader.GetString("Homepage_Url"),
+                            Repository_Url = reader.GetString("Repository_Url"),
+                            Language = reader.GetString("Language"),
+                            Repository_Id = reader.GetInt32("Repository_Id"),
+                        };
+                        projects.Add(project);
+                    }
+                }
+
+                return Ok(projects);
+            }
+            catch (MySqlException e)
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }
