@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using System.Data;
-using Keywords = APi_DataBase.Models.Keywords;
 
 namespace APi_DataBase.Controllers
 {
@@ -31,7 +30,6 @@ namespace APi_DataBase.Controllers
                     + "WHERE p.id = @project_id "
                     + "GROUP BY p.Id;"
 
-                    + "SELECT * FROM keywords WHERE project_id = @project_id;"
                     + "SELECT * FROM versions WHERE project_id = @project_id;"
                     + "SELECT * FROM comments WHERE project_id = @project_id;"
                     );
@@ -43,8 +41,6 @@ namespace APi_DataBase.Controllers
                     projectInfo.Project = Utils.Tools.GetList<Projects>(dataReader)[0];
                     dataReader.NextResult();
                     repository_Id = projectInfo.Project.Repository_Id;
-                    projectInfo.Keywords = Utils.Tools.GetList<Keywords>(dataReader);
-                    dataReader.NextResult();
                     projectInfo.Versions = Utils.Tools.GetList<Versions>(dataReader);
                     dataReader.NextResult();
                     projectInfo.Comments = Utils.Tools.GetList<Comments>(dataReader);
@@ -86,20 +82,16 @@ namespace APi_DataBase.Controllers
                     // Insert the Repositories record with an ID one higher than the highest existing ID
                     var insertRepositoriesCommand = _connection.CreateCommand();
                     insertRepositoriesCommand.Transaction = transaction;
-                    insertRepositoriesCommand.CommandText = @"INSERT INTO repositories (id, host_type, name_with_owner, created_timestamp, last_pushed_timestamp, size, stars_count, language, issues_enabled, forks_count, open_issues_count, uuid)
-                                                        VALUES (@id, @host_type, @name_with_owner, @created_timestamp, @last_pushed_timestamp, @size, @stars_count, @language, @issues_enabled, @forks_count, @open_issues_count, @uuid)";
+                    insertRepositoriesCommand.CommandText = @"INSERT INTO repositories (id, host_type, name_with_owner, created_timestamp, size, stars_count, issues_enabled, forks_count)
+                                                        VALUES (@id, @host_type, @name_with_owner, @created_timestamp, @size, @stars_count, @issues_enabled, @forks_count)";
                     insertRepositoriesCommand.Parameters.AddWithValue("@id", maxRepositoryId + 1);
                     insertRepositoriesCommand.Parameters.AddWithValue("@host_type", projectInfo.Repository.Host_Type);
                     insertRepositoriesCommand.Parameters.AddWithValue("@name_with_owner", projectInfo.Repository.Name_With_Owner);
                     insertRepositoriesCommand.Parameters.AddWithValue("@created_timestamp", projectInfo.Repository.Created_Timestamp);
-                    insertRepositoriesCommand.Parameters.AddWithValue("@last_pushed_timestamp", projectInfo.Repository.Last_Pushed_Timestamp);
                     insertRepositoriesCommand.Parameters.AddWithValue("@size", projectInfo.Repository.Size);
                     insertRepositoriesCommand.Parameters.AddWithValue("@stars_count", projectInfo.Repository.Stars_count);
-                    insertRepositoriesCommand.Parameters.AddWithValue("@language", projectInfo.Repository.Language);
                     insertRepositoriesCommand.Parameters.AddWithValue("@issues_enabled", projectInfo.Repository.Issues_Enabled);
                     insertRepositoriesCommand.Parameters.AddWithValue("@forks_count", projectInfo.Repository.Forks_count);
-                    insertRepositoriesCommand.Parameters.AddWithValue("@open_issues_count", projectInfo.Repository.Open_Issues_Count);
-                    insertRepositoriesCommand.Parameters.AddWithValue("@uuid", projectInfo.Repository.Uuid);
                     insertRepositoriesCommand.ExecuteNonQuery();
 
 
@@ -116,13 +108,12 @@ namespace APi_DataBase.Controllers
                     // Insert the Project records
                     var insertProjectCommand = _connection.CreateCommand();
                     insertProjectCommand.Transaction = transaction;
-                    insertProjectCommand.CommandText = "INSERT INTO projects (id, platform, name, created_timestamp, updated_timestamp, description, homepage_url, repository_url, language, repository_id) " +
-                        "VALUES (@id, @platform, @name, @createdTimestamp, @updatedTimestamp, @description, @homepageUrl, @repositoryUrl, @language, @repositoryId)";
+                    insertProjectCommand.CommandText = "INSERT INTO projects (id, platform, name, created_timestamp, description, homepage_url, repository_url, language, repository_id) " +
+                        "VALUES (@id, @platform, @name, @createdTimestamp, @description, @homepageUrl, @repositoryUrl, @language, @repositoryId)";
                     insertProjectCommand.Parameters.AddWithValue("@id", maxProjectId);
                     insertProjectCommand.Parameters.AddWithValue("@platform", projectInfo.Project.Platform);
                     insertProjectCommand.Parameters.AddWithValue("@name", projectInfo.Project.Name);
                     insertProjectCommand.Parameters.AddWithValue("@createdTimestamp", projectInfo.Project.Created_Timestamp);
-                    insertProjectCommand.Parameters.AddWithValue("@updatedTimestamp", projectInfo.Project.Updated_Timestamp);
                     insertProjectCommand.Parameters.AddWithValue("@description", projectInfo.Project.Description);
                     insertProjectCommand.Parameters.AddWithValue("@homepageUrl", projectInfo.Project.Homepage_Url);
                     insertProjectCommand.Parameters.AddWithValue("@repositoryUrl", projectInfo.Project.Repository_Url);
@@ -130,20 +121,6 @@ namespace APi_DataBase.Controllers
                     insertProjectCommand.Parameters.AddWithValue("@repositoryId", insertedRepositoryId);
                     insertProjectCommand.ExecuteNonQuery();
 
-
-                    // Insert the Keywords records
-                    if (projectInfo.Keywords != null)
-                    {
-                        foreach (var keyword in projectInfo.Keywords)
-                        {
-                            var insertKeywordsCommand = _connection.CreateCommand();
-                            insertKeywordsCommand.Transaction = transaction;
-                            insertKeywordsCommand.CommandText = "INSERT INTO keywords (project_id, keyword) VALUES (@project_id, @keyword)";
-                            insertKeywordsCommand.Parameters.AddWithValue("@project_id", maxProjectId);
-                            insertKeywordsCommand.Parameters.AddWithValue("@keyword", keyword.Keyword);
-                            insertKeywordsCommand.ExecuteNonQuery();
-                        }
-                    }
 
                     // Insert the Versions records
                     if (projectInfo.Versions != null)
