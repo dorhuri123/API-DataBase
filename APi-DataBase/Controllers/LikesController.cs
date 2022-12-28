@@ -86,7 +86,6 @@ namespace APi_DataBase.Controllers
                             Name = reader.GetString("Name"),
                             Description = reader.GetString("Description"),
                             Created_Timestamp = reader.GetDateTime("created_timestamp"),
-                            Updated_Timestamp = reader.GetDateTime("updated_timestamp"),
                             Homepage_Url = reader.GetString("Homepage_Url"),
                             Repository_Url = reader.GetString("Repository_Url"),
                             Language = reader.GetString("Language"),
@@ -100,7 +99,7 @@ namespace APi_DataBase.Controllers
             }
             catch (MySqlException e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
