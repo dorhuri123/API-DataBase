@@ -67,5 +67,55 @@ namespace APi_DataBase.Controllers
                 return BadRequest();
             }
         }
+
+        // GET: api/projects
+        [HttpGet("{startIndex}, {numVersions}")]
+        public async Task<ActionResult<IEnumerable<Projects>>> GetProjectsVersions(int startIndex, int numVersions)
+        {
+            var projects = new List<Projects>();
+
+            try
+            {
+                _connection.Open();
+
+                var command = new MySqlCommand("SELECT p.* " +
+                "FROM Projects p JOIN Repositories r " +
+                "ON p.Repository_Id = r.Id JOIN " +
+                "(SELECT Project_Id, COUNT(*) AS num_versions " +
+                "FROM Versions GROUP BY Project_Id) AS v ON p.Id = v.Project_Id " +
+                "WHERE v.num_versions > @numVersions AND r.Forks_count > (SELECT AVG(Forks_count) " +
+                "FROM Repositories) LIMIT @startIndex,50", _connection);
+
+                command.Parameters.AddWithValue("@startIndex", startIndex);
+                command.Parameters.AddWithValue("@numVersions", numVersions);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var project = new Projects
+                        {
+                            Id = reader.GetInt32("Id"),
+                            Platform = reader.GetString("Platform"),
+                            Name = reader.GetString("Name"),
+                            Description = reader.GetString("Description"),
+                            Created_Timestamp = reader.GetDateTime("created_timestamp"),
+                            Updated_Timestamp = reader.GetDateTime("updated_timestamp"),
+                            Homepage_Url = reader.GetString("Homepage_Url"),
+                            Repository_Url = reader.GetString("Repository_Url"),
+                            Language = reader.GetString("Language"),
+                            Repository_Id = reader.GetInt32("Repository_Id"),
+                        };
+                        projects.Add(project);
+                    }
+                }
+
+                return Ok(projects);
+            }
+            catch (MySqlException)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

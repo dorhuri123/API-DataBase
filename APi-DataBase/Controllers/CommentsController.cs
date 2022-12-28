@@ -15,7 +15,7 @@ namespace APi_DataBase.Controllers
             _connection = connection;
         }
 
-        [HttpPost("AddComment")]
+        [HttpPost("Comment")]
         public IActionResult AddComment([FromBody] Comments comment)
         {
             try
@@ -37,6 +37,5 @@ namespace APi_DataBase.Controllers
                 return BadRequest();
             }
         }
-
     }
 }

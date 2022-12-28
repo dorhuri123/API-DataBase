@@ -1,6 +1,7 @@
 ﻿using APi_DataBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace APi_DataBase.Controllers
 {
@@ -48,7 +49,7 @@ namespace APi_DataBase.Controllers
         [HttpPost("SignIn")]
         public IActionResult SignIn([FromBody] Users user)
         {
-            try 
+            try
             {
                 _connection.Open();
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM users WHERE username=@username AND password=@password", _connection);
@@ -66,6 +67,38 @@ namespace APi_DataBase.Controllers
                     return Unauthorized();
                 }
             }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/GetUsersAboveAvg
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Projects>>> GetUsersAboveAvg()
+        {
+            var users = new List<Users>();
+
+            try
+            {
+                _connection.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT UserName FROM comments GROUP BY UserName HAVING COUNT(*) > (SELECT AVG(num_comments) FROM (SELECT UserName, COUNT(*) AS num_comments FROM comments GROUP BY UserName) AS temp)", _connection);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var user = new Users
+                        {
+                            UserName = reader.GetString("UserName"),
+                        };
+                        users.Add(user);
+                    }
+                }
+
+                return Ok(users);
+            }
+
             catch
             {
                 return BadRequest();
