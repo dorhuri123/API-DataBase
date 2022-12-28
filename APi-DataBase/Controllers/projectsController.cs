@@ -44,7 +44,6 @@ namespace APi_DataBase.Controllers
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
-                            Platform = reader.GetString("Platform"),
                             Name = reader.GetString("Name"),
                             Description = reader.GetString("Description"),
                             Created_Timestamp = reader.GetDateTime("created_timestamp"),
@@ -95,7 +94,6 @@ namespace APi_DataBase.Controllers
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
-                            Platform = reader.GetString("Platform"),
                             Name = reader.GetString("Name"),
                             Description = reader.GetString("Description"),
                             Created_Timestamp = reader.GetDateTime("created_timestamp"),

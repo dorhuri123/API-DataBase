@@ -108,10 +108,9 @@ namespace APi_DataBase.Controllers
                     // Insert the Project records
                     var insertProjectCommand = _connection.CreateCommand();
                     insertProjectCommand.Transaction = transaction;
-                    insertProjectCommand.CommandText = "INSERT INTO projects (id, platform, name, created_timestamp, description, homepage_url, repository_url, language, repository_id) " +
-                        "VALUES (@id, @platform, @name, @createdTimestamp, @description, @homepageUrl, @repositoryUrl, @language, @repositoryId)";
+                    insertProjectCommand.CommandText = "INSERT INTO projects (id, name, created_timestamp, description, homepage_url, repository_url, language, repository_id) " +
+                        "VALUES (@id, @name, @createdTimestamp, @description, @homepageUrl, @repositoryUrl, @language, @repositoryId)";
                     insertProjectCommand.Parameters.AddWithValue("@id", maxProjectId);
-                    insertProjectCommand.Parameters.AddWithValue("@platform", projectInfo.Project.Platform);
                     insertProjectCommand.Parameters.AddWithValue("@name", projectInfo.Project.Name);
                     insertProjectCommand.Parameters.AddWithValue("@createdTimestamp", projectInfo.Project.Created_Timestamp);
                     insertProjectCommand.Parameters.AddWithValue("@description", projectInfo.Project.Description);
