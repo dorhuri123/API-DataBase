@@ -16,6 +16,28 @@ namespace APi_DataBase.Controllers
             _connection = connection;
         }
 
+
+        // GET: api/projects
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<int>>> GetProjectsCount()
+        {
+            var projects = new List<Projects>();
+
+            try
+            {
+                _connection.Open();
+                var command = new MySqlCommand("SELECT COUNT(*) FROM Projects", _connection);
+                var count = command.ExecuteScalar();
+
+                return Ok(count);
+            }
+            catch (MySqlException)
+            {
+                return BadRequest();
+            }
+        }
+
+
         // GET: api/projects
         [HttpGet("{startIndex}")]
         public async Task<ActionResult<IEnumerable<Projects>>> GetProjects(int startIndex)

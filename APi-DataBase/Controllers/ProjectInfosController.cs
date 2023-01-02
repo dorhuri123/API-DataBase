@@ -82,12 +82,11 @@ namespace APi_DataBase.Controllers
                     // Insert the Repositories record with an ID one higher than the highest existing ID
                     var insertRepositoriesCommand = _connection.CreateCommand();
                     insertRepositoriesCommand.Transaction = transaction;
-                    insertRepositoriesCommand.CommandText = @"INSERT INTO repositories (id, host_type, name_with_owner, created_timestamp, size, stars_count, issues_enabled, forks_count)
-                                                        VALUES (@id, @host_type, @name_with_owner, @created_timestamp, @size, @stars_count, @issues_enabled, @forks_count)";
+                    insertRepositoriesCommand.CommandText = @"INSERT INTO repositories (id, host_type, name_with_owner, size, stars_count, issues_enabled, forks_count)
+                                                        VALUES (@id, @host_type, @name_with_owner, @size, @stars_count, @issues_enabled, @forks_count)";
                     insertRepositoriesCommand.Parameters.AddWithValue("@id", maxRepositoryId + 1);
                     insertRepositoriesCommand.Parameters.AddWithValue("@host_type", projectInfo.Repository.Host_Type);
                     insertRepositoriesCommand.Parameters.AddWithValue("@name_with_owner", projectInfo.Repository.Name_With_Owner);
-                    insertRepositoriesCommand.Parameters.AddWithValue("@created_timestamp", projectInfo.Repository.Created_Timestamp);
                     insertRepositoriesCommand.Parameters.AddWithValue("@size", projectInfo.Repository.Size);
                     insertRepositoriesCommand.Parameters.AddWithValue("@stars_count", projectInfo.Repository.Stars_count);
                     insertRepositoriesCommand.Parameters.AddWithValue("@issues_enabled", projectInfo.Repository.Issues_Enabled);
