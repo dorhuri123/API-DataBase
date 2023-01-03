@@ -3,8 +3,8 @@
     public class Projects
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public DateTime? Created_Timestamp { get; set; }
+        public string Name { get; set; }
+        public DateTime Created_Timestamp { get; set; }
         public string? Description { get; set; }
         public string? Homepage_Url { get; set; }
         public string? Repository_Url { get; set; }

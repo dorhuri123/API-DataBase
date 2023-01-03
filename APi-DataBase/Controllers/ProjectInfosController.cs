@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using System.Data;
+using ProjectInfo = APi_DataBase.Models.ProjectInfo;
 
 namespace APi_DataBase.Controllers
 {
@@ -31,7 +32,7 @@ namespace APi_DataBase.Controllers
                     + "GROUP BY p.Id;"
 
                     + "SELECT * FROM versions WHERE project_id = @project_id;"
-                    + "SELECT * FROM comments WHERE project_id = @project_id;"
+                    + "SELECT * FROM comments WHERE project_id = @project_id ORDER BY comments.time DESC;"
                     );
                 MySqlCommand cmd = new(query, _connection);
                 cmd.Parameters.AddWithValue("@project_id", id);
@@ -101,7 +102,7 @@ namespace APi_DataBase.Controllers
                     var selectMaxProjectIdCommand = _connection.CreateCommand();
                     selectMaxProjectIdCommand.Transaction = transaction;
                     selectMaxProjectIdCommand.CommandText = "SELECT MAX(id) FROM projects";
-                    var maxProjectId = (int?)selectMaxRepositoryIdCommand.ExecuteScalar();
+                    var maxProjectId = (int?)selectMaxProjectIdCommand.ExecuteScalar();
                     maxProjectId = maxProjectId + 1;
 
                     // Insert the Project records
@@ -118,7 +119,6 @@ namespace APi_DataBase.Controllers
                     insertProjectCommand.Parameters.AddWithValue("@language", projectInfo.Project.Language);
                     insertProjectCommand.Parameters.AddWithValue("@repositoryId", insertedRepositoryId);
                     insertProjectCommand.ExecuteNonQuery();
-
 
                     // Insert the Versions records
                     if (projectInfo.Versions != null)
