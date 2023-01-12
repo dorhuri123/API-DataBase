@@ -32,7 +32,8 @@ namespace APi_DataBase.Controllers
                     + "GROUP BY p.Id;"
 
                     + "SELECT * FROM versions WHERE project_id = @project_id;"
-                    + "SELECT * FROM comments WHERE project_id = @project_id ORDER BY comments.time DESC;"
+                    + "SELECT * FROM comments WHERE project_id = @project_id "
+                    + "ORDER BY comments.time DESC;"
                     );
                 MySqlCommand cmd = new(query, _connection);
                 cmd.Parameters.AddWithValue("@project_id", id);
