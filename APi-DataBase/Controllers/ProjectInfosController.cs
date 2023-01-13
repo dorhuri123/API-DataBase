@@ -126,12 +126,15 @@ namespace APi_DataBase.Controllers
                     {
                         foreach (var versions in projectInfo.Versions)
                         {
-                            var insertVersionsCommand = _connection.CreateCommand();
-                            insertVersionsCommand.Transaction = transaction;
-                            insertVersionsCommand.CommandText = "INSERT INTO versions (project_id, number) VALUES (@project_id, @number)";
-                            insertVersionsCommand.Parameters.AddWithValue("@project_id", maxProjectId);
-                            insertVersionsCommand.Parameters.AddWithValue("@number", versions.Number);
-                            insertVersionsCommand.ExecuteNonQuery();
+                            if(versions.Number != "")
+                            {
+                                var insertVersionsCommand = _connection.CreateCommand();
+                                insertVersionsCommand.Transaction = transaction;
+                                insertVersionsCommand.CommandText = "INSERT INTO versions (project_id, number) VALUES (@project_id, @number)";
+                                insertVersionsCommand.Parameters.AddWithValue("@project_id", maxProjectId);
+                                insertVersionsCommand.Parameters.AddWithValue("@number", versions.Number);
+                                insertVersionsCommand.ExecuteNonQuery();
+                            }
                         }
                     }
 

@@ -20,17 +20,23 @@ namespace APi_DataBase.Controllers
         {
             try
             {
-                _connection.Open();
+                if(comment.Text != "")
+                {
+                    _connection.Open();
+                    // Insert the new comment into the comments table
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO comments (username, project_id, text, time) VALUES (@username, @projectId, @text, @time)", _connection);
+                    cmd.Parameters.AddWithValue("@username", comment.UserName);
+                    cmd.Parameters.AddWithValue("@projectId", comment.Project_Id);
+                    cmd.Parameters.AddWithValue("@text", comment.Text);
+                    cmd.Parameters.AddWithValue("@time", comment.Time);
+                    cmd.ExecuteNonQuery();
 
-                // Insert the new comment into the comments table
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO comments (username, project_id, text, time) VALUES (@username, @projectId, @text, @time)", _connection);
-                cmd.Parameters.AddWithValue("@username", comment.UserName);
-                cmd.Parameters.AddWithValue("@projectId", comment.Project_Id);
-                cmd.Parameters.AddWithValue("@text", comment.Text);
-                cmd.Parameters.AddWithValue("@time", comment.Time);
-                cmd.ExecuteNonQuery();
-
-                return Ok();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Empty comment");
+                }
             }
             catch
             {

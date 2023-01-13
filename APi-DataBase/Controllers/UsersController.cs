@@ -29,7 +29,7 @@ namespace APi_DataBase.Controllers
                 {
                     return BadRequest("Username already exists.");
                 }
-                else
+                else if(user.UserName != "" && user.Password != "" && user.Full_Name != "")
                 {
                     reader.Close();
                     cmd = new MySqlCommand("INSERT INTO users (username, password, full_name) VALUES (@username, @password, @fullName)", _connection);
@@ -38,6 +38,10 @@ namespace APi_DataBase.Controllers
                     cmd.Parameters.AddWithValue("@fullName", user.Full_Name);
                     cmd.ExecuteNonQuery();
                     return Ok();
+                }
+                else
+                {
+                    return BadRequest("Empty filled");
                 }
             }
             catch
