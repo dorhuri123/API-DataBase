@@ -77,7 +77,7 @@ namespace APi_DataBase.Controllers
             }
         }
 
-        // GET: api/GetUsersAboveAvg
+        // GET: api/GetUsersAboveAvg1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Projects>>> GetUsersAboveAvg()
         {
