@@ -3,6 +3,7 @@ namespace APi_DataBase.Models
 {
     public class Repositories
     {
+        //all attributes are according to the db scheme
         public int Id { get; set; }
         public string? Host_Type { get; set; }
         public string? Name_With_Owner { get; set; }

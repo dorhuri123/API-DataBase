@@ -2,6 +2,7 @@
 {
     public class Projects
     {
+        //all attributes are according to the db scheme
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime Created_Timestamp { get; set; }

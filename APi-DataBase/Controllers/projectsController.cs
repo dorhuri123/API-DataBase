@@ -25,8 +25,11 @@ namespace APi_DataBase.Controllers
 
             try
             {
+                //open connection
                 _connection.Open();
+                //query for number of projects in db
                 var command = new MySqlCommand("SELECT COUNT(*) FROM Projects", _connection);
+                //execute query
                 var count = command.ExecuteScalar();
 
                 return Ok(count);
@@ -46,8 +49,13 @@ namespace APi_DataBase.Controllers
 
             try
             {
+                //open connection
                 _connection.Open();
-
+                /*
+                    query for getting the first 50 project from start index
+                    line sorted according creeated time stamp and adding for
+                    each project number of likes and comments
+                */
                 var command = new MySqlCommand(@"
                     SELECT p.*, COUNT(l.Project_Id) AS Likes_Count,
                         (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count
@@ -56,13 +64,15 @@ namespace APi_DataBase.Controllers
                     GROUP BY p.Id
                     ORDER BY p.created_timestamp DESC
                     LIMIT @startIndex, 50", _connection);
-
+                //adding parameter to query
                 command.Parameters.AddWithValue("@startIndex", startIndex);
-
+                //executing query
                 using (var reader = command.ExecuteReader())
                 {
+                    //while there is project to read
                     while (reader.Read())
                     {
+                        //setting project with all is properties
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
@@ -76,6 +86,7 @@ namespace APi_DataBase.Controllers
                             Likes_Count = reader.GetInt32("Likes_Count"),
                             Comments_Count = reader.GetInt32("Comments_Count")
                         };
+                        //adding project to project list
                         projects.Add(project);
                     }
                 }
@@ -96,8 +107,15 @@ namespace APi_DataBase.Controllers
 
             try
             {
+                //open connection
                 _connection.Open();
-
+                /*
+                    query for getting the first 50 project from start index
+                    line sorted according creeated time stamp and adding for
+                    each project number of likes and comments this for every 
+                    project that have larger number of version then numVersions
+                    and more forks then the average
+                */
                 var command = new MySqlCommand(
                     "SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count " +
                     "FROM Projects p JOIN Repositories r " +
@@ -108,14 +126,15 @@ namespace APi_DataBase.Controllers
                     "GROUP BY p.Id " +
                     "ORDER BY p.created_timestamp DESC " +
                     "LIMIT @startIndex,50;", _connection);
-
+                //adding query parameters
                 command.Parameters.AddWithValue("@startIndex", startIndex);
                 command.Parameters.AddWithValue("@numVersions", numVersions);
-
+                //execute query
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
+                        //setting project with all is properties
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
@@ -129,6 +148,7 @@ namespace APi_DataBase.Controllers
                             Likes_Count = reader.GetInt32("Likes_Count"),
                             Comments_Count = reader.GetInt32("Comments_Count")
                         };
+                        //adding project to project list
                         projects.Add(project);
                     }
                 }

@@ -65,7 +65,12 @@ namespace APi_DataBase.Controllers
 
             try
             {
+                //open the sql connection
                 _connection.Open();
+                /*
+                    query for getting the first 50 project that the user
+                    didnt like sorted according creeated time stamp
+                */
                 var command = new MySqlCommand("SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count" +
                     " FROM Projects p LEFT JOIN Likes l " +
                     "ON l.Project_Id = p.Id WHERE p.id NOT IN " +
@@ -73,14 +78,15 @@ namespace APi_DataBase.Controllers
                     "GROUP BY p.Id " +
                     "ORDER BY p.created_timestamp DESC " +
                     "LIMIT @startIndex, 50", _connection);
-
+                //adding query parameter
                 command.Parameters.AddWithValue("@startIndex", startIndex);
                 command.Parameters.AddWithValue("@username", username);
-
+                //executing query
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
+                        //setting project with all is properties
                         var project = new Projects
                         {
                             Id = reader.GetInt32("Id"),
@@ -94,6 +100,7 @@ namespace APi_DataBase.Controllers
                             Likes_Count = reader.GetInt32("Likes_Count"),
                             Comments_Count = reader.GetInt32("Comments_Count")
                         };
+                        //adding to projects list
                         projects.Add(project);
                     }
                 }
