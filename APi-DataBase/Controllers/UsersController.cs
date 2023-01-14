@@ -99,10 +99,10 @@ namespace APi_DataBase.Controllers
                 //open connection
                 _connection.Open();
                 //query for getting the users who number of there comment is above average
-                MySqlCommand cmd = new MySqlCommand("SELECT UserName FROM comments" +
-                "GROUP BY UserName HAVING COUNT(*) > (SELECT AVG(num_comments)" +
-                "FROM (SELECT UserName, COUNT(*) AS num_comments" +
-                "FROM comments GROUP BY UserName) AS temp)", _connection);
+                MySqlCommand cmd = new MySqlCommand("SELECT UserName FROM comments " +
+                "GROUP BY UserName HAVING COUNT(*) > (SELECT AVG(num_comments) " +
+                "FROM (SELECT UserName, COUNT(*) AS num_comments " +
+                "FROM comments GROUP BY UserName) AS temp) ", _connection);
                 //execute query
                 using (var reader = cmd.ExecuteReader())
                 {
