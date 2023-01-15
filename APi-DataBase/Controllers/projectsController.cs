@@ -57,11 +57,10 @@ namespace APi_DataBase.Controllers
                     each project number of likes and comments
                 */
                 var command = new MySqlCommand(@"
-                    SELECT p.*, COUNT(l.Project_Id) AS Likes_Count,
-                        (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count
+                    SELECT p.*,
+                    (SELECT COUNT(*) FROM Likes WHERE Project_Id = p.Id) AS Likes_Count,
+                    (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count
                     FROM Projects p
-                    LEFT JOIN Likes l ON l.Project_Id = p.Id
-                    GROUP BY p.Id
                     ORDER BY p.created_timestamp DESC
                     LIMIT @startIndex, 50", _connection);
                 //adding parameter to query
@@ -116,16 +115,16 @@ namespace APi_DataBase.Controllers
                     project that have larger number of version then numVersions
                     and more forks then the average
                 */
-                var command = new MySqlCommand(
-                    "SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count " +
+                var command = new MySqlCommand("SELECT p.*, " +
+                    "(SELECT COUNT(*) FROM Likes WHERE Project_Id = p.Id) AS Likes_Count, " +
+                    "(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count " +
                     "FROM Projects p JOIN Repositories r " +
                     "ON p.Repository_Id = r.Id JOIN " +
                     "(SELECT Project_Id, COUNT(*) AS num_versions FROM Versions GROUP BY Project_Id) AS v " +
-                    "ON p.Id = v.Project_Id LEFT JOIN Likes l ON l.Project_Id = p.Id " +
+                    "ON p.Id = v.Project_Id " +
                     "WHERE v.num_versions > @numVersions AND r.Forks_count > (SELECT AVG(Forks_count) FROM Repositories) " +
-                    "GROUP BY p.Id " +
                     "ORDER BY p.created_timestamp DESC " +
-                    "LIMIT @startIndex,50;", _connection);
+                    "LIMIT @startIndex,50", _connection);
                 //adding query parameters
                 command.Parameters.AddWithValue("@startIndex", startIndex);
                 command.Parameters.AddWithValue("@numVersions", numVersions);

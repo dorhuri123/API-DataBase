@@ -28,11 +28,11 @@ namespace APi_DataBase.Controllers
                 _connection.Open();
                 //query for getting the project info(versions,comments,Likes)
                 string query = (
-                     "SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, "
-                    + "(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count "
-                    + "FROM Projects p LEFT JOIN Likes l ON l.Project_Id = p.Id "
-                    + "WHERE p.id = @project_id "
-                    + "GROUP BY p.Id;"
+                     "SELECT p.*, " +
+                     "(SELECT COUNT(*) FROM Likes WHERE Project_Id = p.Id) AS Likes_Count, " +
+                     "(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count " +
+                     "FROM Projects p " +
+                     "WHERE p.id = @project_id; "
 
                     + "SELECT * FROM versions WHERE project_id = @project_id;"
                     + "SELECT * FROM comments WHERE project_id = @project_id "

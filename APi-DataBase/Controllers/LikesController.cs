@@ -71,11 +71,11 @@ namespace APi_DataBase.Controllers
                     query for getting the first 50 project that the user
                     didnt like sorted according creeated time stamp
                 */
-                var command = new MySqlCommand("SELECT p.*, COUNT(l.Project_Id) AS Likes_Count, (SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count" +
-                    " FROM Projects p LEFT JOIN Likes l " +
-                    "ON l.Project_Id = p.Id WHERE p.id NOT IN " +
-                    "(SELECT l.project_id FROM likes l WHERE l.username = @username ) " +
-                    "GROUP BY p.Id " +
+                var command = new MySqlCommand("SELECT p.*, " +
+                    "(SELECT COUNT(*) FROM Likes l WHERE l.Project_Id = p.Id) AS Likes_Count, " +
+                    "(SELECT COUNT(*) FROM Comments WHERE Project_Id = p.Id) AS Comments_Count " +
+                    "FROM Projects p " +
+                    "WHERE p.id NOT IN (SELECT l.project_id FROM likes l WHERE l.username = @username) " +
                     "ORDER BY p.created_timestamp DESC " +
                     "LIMIT @startIndex, 50", _connection);
                 //adding query parameter
